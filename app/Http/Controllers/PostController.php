@@ -1,0 +1,123 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Post;
+use App\Http\Requests\StorePostRequest;
+use App\Http\Requests\UpdatePostRequest;
+use App\Models\Address;
+use App\Models\User;
+use Illuminate\Http\Client\Request;
+
+class PostController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        // $address = Address::find(1);
+        // dd($address->user);
+        $user = request()->user();
+        // $users = User::with('posts')->get();
+
+        // foreach ($users as $user) {
+        //     var_dump($users->posts); // posts is already loaded and no additional DB query is run
+        // }
+        //
+        $query = request()->q;
+        // $posts = Post::all();
+        $posts = Post::with('user')->where('title', 'like', "%$query%")
+            ->orWhere('body', 'like', "%$query%")
+            ->paginate(25);
+
+
+
+        // $post = Post::find(1);
+        // dd($post->user);
+
+        return view('post', [
+            'title' => 'Post Page',
+            'query' => $query,
+            'posts' => $posts,
+            'user' => $user,
+        ]);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \App\Http\Requests\StorePostRequest  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(StorePostRequest $request)
+    {
+        //
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Post  $post
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        $post = Post::find($id);
+
+        //
+        return view('clicked_post', [
+            'post' => $post
+        ]);
+    }
+    // public function show(Post $post)
+    // {
+    //     //
+    // }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\Models\Post  $post
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Post $post)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \App\Http\Requests\UpdatePostRequest  $request
+     * @param  \App\Models\Post  $post
+     * @return \Illuminate\Http\Response
+     */
+    public function update(UpdatePostRequest $request, Post $post)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Models\Post  $post
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Post $post)
+    {
+        //
+    }
+}
